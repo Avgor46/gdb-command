@@ -669,6 +669,7 @@ impl<'a> GdbCommand<'a> {
         }
 
         // Run gdb and get output
+        println!("{:?}", gdb_args);
         let mut output = gdb.args(&gdb_args).output()?;
         if output.status.success() {
             output.stdout.append(&mut output.stderr.clone());
