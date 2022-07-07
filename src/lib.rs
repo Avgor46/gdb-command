@@ -741,11 +741,13 @@ impl<'a> GdbCommand<'a> {
         let stdout = self.raw()?;
         let output = String::from_utf8(stdout).unwrap();
         let re = Regex::new(r#"(?m)^\$\d+\s*=\s*"gdb-command"$"#).unwrap();
+        println!("\n {} \n", output);
         let mut result = re
             .split(&output)
             .map(|s| s.trim().to_string())
             .collect::<Vec<String>>();
         result.remove(0);
+        println!("\n {:?} \n", result);
         Ok(result)
     }
 }
