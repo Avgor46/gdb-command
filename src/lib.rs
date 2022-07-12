@@ -679,7 +679,9 @@ impl<'a> GdbCommand<'a> {
             output.stdout.append(&mut output.stderr.clone());
             Ok(output.stdout)
         } else {
-            Err(error::Error::ExitCode(output.status.code().unwrap()))
+            //Err(error::Error::ExitCode(output.status.code().unwrap()))
+            output.stdout.append(&mut output.stderr.clone());
+            Err(error::Error::NoFile(String::from_utf8(output.stdout).unwrap()))
         }
     }
 
