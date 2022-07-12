@@ -49,7 +49,7 @@ use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::path::Path;
 use std::path::PathBuf;
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 /// `File` struct represents unit (segment) in proccess address space.
 #[derive(Clone, Default, Debug)]
@@ -669,7 +669,12 @@ impl<'a> GdbCommand<'a> {
         }
 
         // Run gdb and get output
-        let mut output = gdb.args(&gdb_args).output()?;
+        //let mut output = gdb.args(&gdb_args).output()?;
+        let mut child = gdb.args(&gdb_args)
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()?;
+        let mut output = child.wait_with_output()?;
         if output.status.success() {
             output.stdout.append(&mut output.stderr.clone());
             Ok(output.stdout)
